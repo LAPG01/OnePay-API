@@ -4,20 +4,11 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.db import create_all_tables
-from app.routers import auth, customers, invoices, plans, subscriptions, transactions
+from app.routers import auth, customers  #, invoices, plans, subscriptions, transactions
 
 #Membership Management System.
 
 app = FastAPI(lifespan=create_all_tables, title="OnePay API", description="Membership and Recurring Payments API", version="1.0.0")
-
-# --- RUTAS ---
-
-app.include_router(customers.router)
-app.include_router(invoices.router)
-app.include_router(transactions.router)
-app.include_router(plans.router)
-app.include_router(subscriptions.router)
-app.include_router(auth.router)
 
 # --- MIDDLEWARES ---
 
@@ -46,7 +37,18 @@ async def log_request_headers(request: Request, call_next):
     response = await call_next(request) 
     return response
 
+# --- ROUTERS ---
 
 @app.get("/", tags=['home'])
 async def root (): 
             return {"message": "Welcome to OnePay API. Visit /docs for API documentation."}
+        
+# --- RUTAS ---
+
+app.include_router(customers.router)
+app.include_router(auth.router)
+
+#app.include_router(invoices.router)
+#app.include_router(transactions.router)
+#app.include_router(plans.router)
+#app.include_router(subscriptions.router)
